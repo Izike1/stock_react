@@ -1,0 +1,35 @@
+.header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: 40px;
+    width: 100vw;
+}
+
+.headerBody {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 70px;
+    width: 70%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+.headerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.headerSvg {
+    width: 40px;
+    height: 40px;
+
+    cursor: pointer;
+}
