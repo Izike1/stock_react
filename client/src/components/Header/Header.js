@@ -1,10 +1,21 @@
-import React from 'react'
+import * as React from 'react'
 import { Link } from 'react-router-dom'
 
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import HomeIcon from '@mui/icons-material/Home';
 import { Button } from '@mui/material';
 import styles from './Header.module.css'
 
 export default function Header() {
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget)
+    }
+    const handleClose = () => {
+        setAnchorEl(null)
+    }
     return (
         <>
             <header className={styles.header}>
@@ -12,13 +23,44 @@ export default function Header() {
                     <div className={styles.headerContent}>
                         <div className={styles.headerLogo}>
                             <Link to="/home">
-                                <svg className={styles.headerSvg} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" /><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" /></svg>
+                                <HomeIcon color="primary" fontSize="large" />
                             </Link>
                         </div>
                         <nav className={styles.headerNav}>
-                            <Link to="/other">
+                            <Button
+                                id="basic-button"
+                                aria-controls={open ? 'basic-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                variant='text'
+                                onClick={handleClick}
+                            >
+                                Profile
+                            </Button>
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                    'aria-labelledby': 'basic-button',
+                                }}
+                            >
+                                <MenuItem onClick={handleClose}>
+                                    <Link className={styles.headerLink} to="/profile">Profile</Link>
+                                </MenuItem>
+                                <MenuItem onClick={handleClose}>
+                                    <Link className={styles.headerLink} to="/inventory">
+                                        My inventory
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem onClick={handleClose}>
+                                    <Link className={styles.headerLink} to='/logout'>Logout</Link>
+                                </MenuItem>
+                            </Menu>
+                            {/*<Link to="/other">
                                 <Button color='primary' variant='contained'>other</Button>
-                            </Link>
+                            </Link>*/}
                         </nav>
                     </div>
                 </div>
