@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 import Menu from '@mui/material/Menu';
@@ -8,6 +8,7 @@ import { Button } from '@mui/material';
 import styles from './Header.module.css'
 
 export default function Header() {
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -35,7 +36,7 @@ export default function Header() {
                                 variant='text'
                                 onClick={handleClick}
                             >
-                                Profile
+                                Menu
                             </Button>
                             <Menu
                                 id="basic-menu"
@@ -47,20 +48,17 @@ export default function Header() {
                                 }}
                             >
                                 <MenuItem onClick={handleClose}>
-                                    <Link className={styles.headerLink} to="/profile">Profile</Link>
+                                    <Link className={styles.headerLink} to="/staff">Staff</Link>
                                 </MenuItem>
                                 <MenuItem onClick={handleClose}>
-                                    <Link className={styles.headerLink} to="/inventory">
-                                        My inventory
+                                    <Link className={styles.headerLink} to="/stock">
+                                        Stock
                                     </Link>
                                 </MenuItem>
                                 <MenuItem onClick={handleClose}>
-                                    <Link className={styles.headerLink} to='/logout'>Logout</Link>
+                                    <Link className={styles.headerLink} to='/suppliers'>Suppliers</Link>
                                 </MenuItem>
                             </Menu>
-                            {/*<Link to="/other">
-                                <Button color='primary' variant='contained'>other</Button>
-                            </Link>*/}
                         </nav>
                     </div>
                 </div>
