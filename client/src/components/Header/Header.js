@@ -25,7 +25,7 @@ export default function Header() {
                     <div className={styles.headerBody}>
                         <div className={styles.headerContent}>
                             <div className={styles.headerLogo}>
-                                <Link to="/home">
+                                <Link to="/">
                                     <HomeIcon color="primary" fontSize="large" />
                                 </Link>
                             </div>

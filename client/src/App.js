@@ -16,7 +16,7 @@ function App() {
                 <Header />
                 <div className={styles.wrapper}>
                     <Routes>
-                        <Route path='/home' element={<Home />} />
+                        <Route path='/' element={<Home />} />
                         <Route path='/stock' element={<Stock />} />
                         <Route path='/staff' element={<Staff />} />
                         <Route path='/addform' element={<AddForm />} />
