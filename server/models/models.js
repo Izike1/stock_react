@@ -18,11 +18,11 @@ const Order = sequelize.define('order', {
     status: { type: DataTypes.STRING, allowNull: false }
 })
 
-const Inventory = sequelize.define('inventory', {
+const Customer = sequelize.define('customer', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name_stock: { type: DataTypes.STRING },
-    description: { type: DataTypes.STRING },
-    quantity: { type: DataTypes.STRING }
+    description_order: { type: DataTypes.STRING },
+    quantity_order: { type: DataTypes.STRING }
 })
 
 const Provider = sequelize.define('provider', {
@@ -33,7 +33,12 @@ const Provider = sequelize.define('provider', {
     contact_person: { type: DataTypes.STRING, allowNull: false }
 })
 
-const OrderInventory = sequelize.define('order_inventory', {
+const Stock = sequelize.define('stock', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING, allowNull: false }
+})
+
+const StockOrder = sequelize.define('stock_order', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
 })
 
@@ -43,13 +48,16 @@ Order.belongsTo(Employee)
 Provider.hasMany(Order)
 Order.belongsTo(Provider)
 
-Inventory.belongsToMany(Order, { through: OrderInventory })
-Order.belongsToMany(Inventory, { through: OrderInventory })
+Customer.hasMany(Order)
+Order.belongsTo(Customer)
+
+Stock.belongsToMany(Order, { through: StockOrder })
+Order.belongsToMany(Stock, { through: StockOrder })
 
 module.exports = {
     Employee,
     Order,
-    Inventory,
+    Customer,
     Provider,
-    OrderInventory
+    Stock
 }
