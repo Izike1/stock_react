@@ -5,18 +5,15 @@ const PORT = process.env.PORT || 5000;
 const models = require('./models/models');
 const cors = require('cors');
 const router = require('./routes/routes');
-
+const errorHandler = require('./middleware/ErrorHandlingMiddleware');
 
 const app = express();
 
 app.use(cors())
 app.use(express.json())
 app.use('/api', router)
+app.use(errorHandler)
 
-
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'working' })
-})
 
 const start = async () => {
     try {

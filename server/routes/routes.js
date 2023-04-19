@@ -1,7 +1,7 @@
 const Router = require('express');
 const router = new Router();
 const customerRouter = require('./customerRouter');
-const employmentRouter = require('./employmentRouter');
+const employmentRouter = require('./employeeRouter');
 const orderRouter = require('./orderRouter');
 const providerRouter = require('./providerRouter');
 const stockRouter = require('./stockRouter');
