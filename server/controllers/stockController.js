@@ -1,6 +1,10 @@
+const { Stock } = require('../models/models');
+
 class StockController {
     async create(req, res) {
-        res.json({ message: 'OK' })
+        const { name, address } = req.body;
+        const stock = Stock.create({ name, address });
+        return res.json(stock)
     }
 
     async delete(req, res) {
@@ -8,6 +12,8 @@ class StockController {
     }
 
     async getAll(req, res) {
+        const stocks = await Stock.findAll();
+        return res.json(stocks);
 
     }
 }
