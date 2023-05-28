@@ -8,14 +8,26 @@ class OrderController {
         return res.json(order)
     }
 
-    async delete(req, res) {
+    async delete(req, res, next) {
+        const { id } = req.query;
 
+        if (!id) {
+           next(ApiError.badRequest('Error id'))
+        }
+         await Order.destroy({where: { id: id }})
+        return res.json()
     }
 
     async getAll(req, res) {
-        const orders = await Order.findAll();
-        return res.json(orders)
+        const { id } = req.query;
+        let order;
+        if (!id) {
+            order = await Order.findAll();
+            return res.json(order)
+        }
+        order = await Order.findAll({where: { id: id }});
+        return res.json(order)
     }
 }
 
-module.exports = new OrderController(); Order
+module.exports = new OrderController();

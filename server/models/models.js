@@ -15,16 +15,12 @@ const Employee = sequelize.define('employee', {
 const Order = sequelize.define('order', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     data_order: { type: DataTypes.DATE, allowNull: false },
-    id_employee: { type: DataTypes.INTEGER },
-    id_customer: { type: DataTypes.INTEGER },
-    id_provider: { type: DataTypes.INTEGER },
-    id_stock: { type: DataTypes.INTEGER },
     status: { type: DataTypes.STRING, allowNull: false }
 })
 
 const Customer = sequelize.define('customer', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, allowNull: false },
+    name: { type: DataTypes.STRING, allowNull: false},
     telephone: { type: DataTypes.STRING, allowNull: false },
     description_order: { type: DataTypes.STRING, allowNull: false },
     quantity_order: { type: DataTypes.STRING, allowNull: false }

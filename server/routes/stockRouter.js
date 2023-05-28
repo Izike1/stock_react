@@ -3,7 +3,10 @@ const router = new Router;
 const stockController = require('../controllers/stockController');
 
 
-router.post('/')
-router.get('/')
+router.post('/create', stockController.create)
+
+router.get('/getAll', stockController.getAll)
+
+router.delete('/delete', stockController.delete)
 
 module.exports = router;

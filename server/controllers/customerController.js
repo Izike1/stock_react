@@ -2,10 +2,13 @@ const { Customer } = require('../models/models');
 
 class CustomerController {
     async create(req, res) {
-        const { name, telephone, description_order, quantity_order } = req.body;
-        const customer = await Customer.create({ name, telephone, description_order, quantity_order });
+        try {
+            const { name, telephone, description_order, quantity_order } = req.body;
+            const customer = await Customer.create({ name, telephone, description_order, quantity_order });
 
-        return res.json(customer);
+            return res.json(customer);
+        }
+        catch (e) {console.error('Error create customer',e)}
     }
 
     async delete(req, res) {
@@ -22,6 +25,7 @@ class CustomerController {
         let customers;
         if (!id) {
             customers = await Customer.findAll();
+            return res.json(customers)
         }
         customers = await Customer.findAll({ where: { id: id } });
         return res.json(customers)

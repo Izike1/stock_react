@@ -3,9 +3,12 @@ const router = new Router();
 const orderController = require('../controllers/orderController');
 
 
-router.post('/', orderController.create)
-router.get('/', orderController.getAll)
+router.post('/create', orderController.create)
+
+
+router.get('/getAll', orderController.getAll)
 router.get('/:id')
 
+router.delete('/delete', orderController.delete)
 
 module.exports = router;
