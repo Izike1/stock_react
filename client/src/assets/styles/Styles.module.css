@@ -1,0 +1,65 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.title {
+    margin: 0 0 15px 0;
+}
+
+.homeLink {
+    margin: 15px 0 0 0;
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    margin-top: 20px;
+    align-self: flex-end;
+}
+
+.field {
+    margin-bottom: 20px !important;
+}
+
+input[type="date"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+    background: transparent;
+    padding: 8px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    border-bottom: 2px solid #ccc;
+    transition: border-color 0.3s ease;
+}
+
+input[type="date"]:focus {
+    outline: none;
+    border-color: #555;
+}
+
+input[type="date"]:hover {
+    border-color: #888;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    color: #888;
+    font-size: 14px;
+    padding: 0 4px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+input[type="date"]:hover::-webkit-calendar-picker-indicator {
+    opacity: 1;
+}
+
+input[type="date"]:focus::-webkit-calendar-picker-indicator {
+    opacity: 1;
+}

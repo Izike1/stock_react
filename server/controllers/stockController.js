@@ -3,9 +3,14 @@ const ApiError = require("../errors/ApiErrors");
 
 class StockController {
     async create(req, res) {
-        const { name, address } = req.body;
-        const stock = Stock.create({ name, address });
-        return res.json(stock)
+        try {
+            const { name, address } = req.body;
+            const stock = await Stock.create({ name, address });
+
+            return res.json(stock)
+        } catch (e) {
+            console.error('Error create stock', e)
+        }
     }
 
     async delete(req, res, next) {

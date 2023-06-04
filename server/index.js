@@ -28,4 +28,4 @@ const start = async () => {
 }
 
 
-start().then(r => r);
+start();

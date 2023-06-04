@@ -24,12 +24,12 @@ export default function Header() {
                 <Paper variant='outlined'>
                     <div className={styles.headerBody}>
                         <div className={styles.headerContent}>
-                            <div className={styles.headerLogo}>
+                            <div>
                                 <Link to="/">
                                     <HomeIcon color="primary" fontSize="large" />
                                 </Link>
                             </div>
-                            <nav className={styles.headerNav}>
+                            <nav>
                                 <Button
                                     id="basic-button"
                                     aria-controls={open ? 'basic-menu' : undefined}
@@ -38,7 +38,7 @@ export default function Header() {
                                     variant='text'
                                     onClick={handleClick}
                                 >
-                                    Menu
+                                    Меню
                                 </Button>
                                 <Menu
                                     id="basic-menu"
@@ -50,7 +50,7 @@ export default function Header() {
                                     }}
                                 >
                                     <MenuItem onClick={handleClose}>
-                                        <Link className={styles.headerLink} to="/staff">Staff</Link>
+                                        <Link className={styles.headerLink} to="/employee">Employee</Link>
                                     </MenuItem>
                                     <MenuItem onClick={handleClose}>
                                         <Link className={styles.headerLink} to="/stock">
@@ -58,7 +58,7 @@ export default function Header() {
                                         </Link>
                                     </MenuItem>
                                     <MenuItem onClick={handleClose}>
-                                        <Link className={styles.headerLink} to='/suppliers'>Suppliers</Link>
+                                        <Link className={styles.headerLink} to='/provider'>Provider</Link>
                                     </MenuItem>
                                 </Menu>
                             </nav>

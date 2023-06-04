@@ -9,13 +9,14 @@ const Employee = sequelize.define('employee', {
     surname: { type: DataTypes.STRING, allowNull: false },
     job_title: { type: DataTypes.STRING, allowNull: false },
     date_of_employment: { type: DataTypes.DATE, allowNull: false },
-    salary: { type: DataTypes.INTEGER, allowNull: false },
+    salary: { type: DataTypes.STRING, allowNull: false },
 })
 
 const Order = sequelize.define('order', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     data_order: { type: DataTypes.DATE, allowNull: false },
-    status: { type: DataTypes.STRING, allowNull: false }
+    status: { type: DataTypes.STRING, allowNull: false },
+    description: { type: DataTypes.STRING, allowNull: false }
 })
 
 const Customer = sequelize.define('customer', {

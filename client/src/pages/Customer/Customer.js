@@ -1,8 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
-import { fetchAddOrderSlice, fetchOrders, fetchUpdateOrder, fetchDeleteOrder } from "../../redux/slices/ordersSlice";
 import { useForm } from 'react-hook-form';
+import { fetchCreateCustomer, fetchCustomer } from "../../redux/slices/customerSlice";
 
 import { TextField } from "@mui/material";
 import Dialog from '@mui/material/Dialog';
@@ -19,13 +19,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import styles from "../../assets/styles/Styles.module.css";
+import styles from '../../assets/styles/Styles.module.css'
 
-export default function Home() {
+export default function Customer() {
     const dispatch = useDispatch();
 
     const [open, setOpen] = React.useState(false);
-    const [orderId, setOrderId] = React.useState(null);
 
     const { register, handleSubmit, setError, formState: { errors, isValid } } = useForm({
         defaultValues: {
@@ -34,45 +33,29 @@ export default function Home() {
             data_order: ''
         }
     })
-    const { items: orders, status } = useSelector(state => state.order.orders);
-
+    const { items: customers, status } = useSelector(state => state.customer.customers);
 
     React.useEffect(() => {
-        dispatch(fetchOrders())
+        dispatch(fetchCustomer)
     }, [dispatch])
 
-    const onSubmit = (value) => {
-        if (orderId) {
-            console.log('id = ', orderId)
-            dispatch(fetchUpdateOrder({ id: orderId, ...value }));
-        } else {
-            dispatch(fetchAddOrderSlice(value));
-        }
-        handleClose();
+    const onSubmit = (data) => {
+        dispatch(fetchCreateCustomer(data))
     }
 
-    const handleDelete = (value) => {
-        if (orderId) {
-            dispatch(fetchDeleteOrder({ id: orderId, ...value }))
-        }
-        handleClose();
-    }
-
-    const handleOpen = (orderId) => {
+    const handleOpen = () => {
         setOpen(true);
-        setOrderId(orderId);
     }
 
     const handleClose = () => {
         setOpen(false);
-        setOrderId(null);
     }
 
     return (
         <>
             <main className={styles.root}>
                 <Typography variant="h4" component="h4" className={styles.title}>
-                    Заказы
+                    Клиенты
                 </Typography>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -94,17 +77,20 @@ export default function Home() {
                                     <TableCell colSpan={4}>Ошибка при загрузке заказов.</TableCell>
                                 </TableRow>
                             ) : (
-                                orders.map((obj, index) => (
-                                    <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                        <TableCell component="th" scope="row">
-                                            {obj.description}
-                                        </TableCell>
-                                        <TableCell align="right">{obj.data_order}</TableCell>
-                                        <TableCell align="right">{obj.status}</TableCell>
-                                        <TableCell align="right">
-                                            <Button onClick={() => handleOpen(obj.id)}>Изменить</Button>
-                                        </TableCell>
-                                    </TableRow>
+                                customers.map((obj, index) => (
+                                    <>
+                                        <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                                            <TableCell component="th" scope="row">
+                                                {obj.name}
+                                            </TableCell>
+                                            <TableCell align="right">{obj.telephone}</TableCell>
+                                            <TableCell align="right">{obj.description_order}</TableCell>
+                                            <TableCell align="right">{obj.quantity_order}</TableCell>
+                                            <TableCell align="right">
+                                                <Button onClick={() => handleOpen(obj.id)}>Изменить</Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    </>
                                 ))
                             )}
                         </TableBody>
@@ -112,11 +98,11 @@ export default function Home() {
                 </TableContainer>
                 <Button>
                     <Link className={styles.homeLink} onClick={handleOpen}>
-                        Добавить позицию
+                        Добавить клиента
                     </Link>
                 </Button>
                 <Dialog open={open} onClose={handleClose}>
-                    <DialogTitle>Изменить/Добавить заказ</DialogTitle>
+                    <DialogTitle>Изменить/Добавить клиента</DialogTitle>
                     <DialogContent>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <TextField
