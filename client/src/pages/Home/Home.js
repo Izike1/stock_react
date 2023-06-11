@@ -1,9 +1,11 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from 'react-router-dom';
-import { fetchAddOrderSlice, fetchOrders, fetchUpdateOrder, fetchDeleteOrder } from "../../redux/slices/ordersSlice";
+import { fetchProducts, fetchCreateProduct, fetchDeleteProduct } from "../../redux/slices/productSlice";
+import { fetchProviders } from "../../redux/slices/providerSlice";
+import { fetchCategories } from "../../redux/slices/categoriesSlice";
 import { useForm } from 'react-hook-form';
 
+import { MenuItem, Select } from "@mui/material";
 import { TextField } from "@mui/material";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -24,99 +26,99 @@ import styles from "../../assets/styles/Styles.module.css";
 export default function Home() {
     const dispatch = useDispatch();
 
+    const [selectedCategory, setSelectedCategory] = React.useState("");
+    const [selectedProvider, setSelectedProvider] = React.useState("");
     const [open, setOpen] = React.useState(false);
-    const [orderId, setOrderId] = React.useState(null);
+    const [productId, setProductId] = React.useState(null);
 
     const { register, handleSubmit, setError, formState: { errors, isValid } } = useForm({
         defaultValues: {
             description: '',
-            status: '',
-            data_order: ''
+            price: '',
+            name: '',
+            quantity: '',
         }
-    })
-    const { items: orders, status } = useSelector(state => state.order.orders);
-
+    });
+    const { items: product } = useSelector(state => state.product.products);
+    const { items: providers } = useSelector(state => state.provider.providers);
+    const { items: categories } = useSelector(state => state.categories.categories);
 
     React.useEffect(() => {
-        dispatch(fetchOrders())
-    }, [dispatch])
+        dispatch(fetchProducts());
+        dispatch(fetchCategories());
+        dispatch(fetchProviders());
+        console.log(providers.name)
+    }, [dispatch]);
 
-    const onSubmit = (value) => {
-        if (orderId) {
-            console.log('id = ', orderId)
-            dispatch(fetchUpdateOrder({ id: orderId, ...value }));
-        } else {
-            dispatch(fetchAddOrderSlice(value));
-        }
+    const onSubmit = (data) => {
+        const productData = {
+            ...data,
+            categoryId: selectedCategory,
+            providerId: selectedProvider
+        };
+        dispatch(fetchCreateProduct(productData));
         handleClose();
-    }
+    };
 
     const handleDelete = (value) => {
-        if (orderId) {
-            dispatch(fetchDeleteOrder({ id: orderId, ...value }))
+        if (productId) {
+            dispatch(fetchDeleteProduct({ id: productId, ...value }));
         }
         handleClose();
-    }
+    };
 
-    const handleOpen = (orderId) => {
+    const handleOpen = (productId) => {
         setOpen(true);
-        setOrderId(orderId);
-    }
+        setProductId(productId);
+    };
 
     const handleClose = () => {
         setOpen(false);
-        setOrderId(null);
-    }
+        setProductId(null);
+    };
 
     return (
         <>
             <main className={styles.root}>
                 <Typography variant="h4" component="h4" className={styles.title}>
-                    Заказы
+                    Продукты
                 </Typography>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Описание</TableCell>
-                                <TableCell align="right">Дата создания</TableCell>
-                                <TableCell align="right">Статус</TableCell>
-                                <TableCell align="right">Действия</TableCell>
+                                <TableCell align="right">Название</TableCell>
+                                <TableCell align="right">Цена</TableCell>
+                                <TableCell align="right">Количество</TableCell>
+                                <TableCell align="right">Категория</TableCell>
+                                <TableCell align="right">Поставщик</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>
-                            {status === "loading" ? (
-                                <TableRow>
-                                    <TableCell colSpan={4}>Загрузка...</TableCell>
-                                </TableRow>
-                            ) : status === "error" ? (
-                                <TableRow>
-                                    <TableCell colSpan={4}>Ошибка при загрузке заказов.</TableCell>
-                                </TableRow>
-                            ) : (
-                                orders.map((obj, index) => (
+                            <TableBody>
+                                {product.map((obj, index) => (
                                     <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                                         <TableCell component="th" scope="row">
                                             {obj.description}
                                         </TableCell>
-                                        <TableCell align="right">{obj.data_order}</TableCell>
-                                        <TableCell align="right">{obj.status}</TableCell>
+                                        <TableCell align="right">{obj.name}</TableCell>
+                                        <TableCell align="right">{obj.price}</TableCell>
+                                        <TableCell align="right">{obj.quantity}</TableCell>
+                                        <TableCell align="right">{obj.category?.name}</TableCell>
+                                        <TableCell align="right">{obj.provider?.name}</TableCell>
                                         <TableCell align="right">
                                             <Button onClick={() => handleOpen(obj.id)}>Изменить</Button>
                                         </TableCell>
                                     </TableRow>
-                                ))
-                            )}
-                        </TableBody>
+                                ))}
+                            </TableBody>
                     </Table>
                 </TableContainer>
-                <Button>
-                    <Link className={styles.homeLink} onClick={handleOpen}>
-                        Добавить позицию
-                    </Link>
+                <Button className={styles.homeLink} onClick={() => handleOpen(null)}>
+                    Добавить продукт
                 </Button>
                 <Dialog open={open} onClose={handleClose}>
-                    <DialogTitle>Изменить/Добавить заказ</DialogTitle>
+                    <DialogTitle>{productId ? "Изменить продукт" : "Добавить продукт"}</DialogTitle>
                     <DialogContent>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <TextField
@@ -124,28 +126,71 @@ export default function Home() {
                                 className={styles.field}
                                 error={Boolean(errors.description?.message)}
                                 {...register('description', { required: 'Пустое поле' })}
-                                label='Описание заказа'
+                                label='Описание продукта'
                                 fullWidth
                             />
                             <TextField
                                 variant="standard"
                                 className={styles.field}
-                                error={Boolean(errors.status?.message)}
-                                {...register('status', { required: 'Пустое поле' })}
-                                label='Статус заказа'
+                                error={Boolean(errors.name?.message)}
+                                {...register('name', { required: 'Пустое поле' })}
+                                label='Название продукта'
                                 fullWidth
                             />
-                            <p>Дата создания заказа</p>
-                            <input
-                                type="date"
-                                {...register('data_order', { required: 'Пустое поле' })}
+                            <TextField
+                                variant="standard"
                                 className={styles.field}
+                                error={Boolean(errors.price?.message)}
+                                {...register('price', { required: 'Пустое поле' })}
+                                label='Цена продукта'
+                                fullWidth
                             />
+                            <TextField
+                                variant="standard"
+                                className={styles.field}
+                                error={Boolean(errors.quantity?.message)}
+                                {...register('quantity', { required: 'Пустое поле' })}
+                                label='Количество продукта'
+                                fullWidth
+                            />
+                            <Select
+                                className={styles.select}
+                                value={selectedCategory}
+                                onChange={(event) => setSelectedCategory(event.target.value)}
+                                label="Категория"
+                                fullWidth
+                            >
+                                <MenuItem value="">Выберите категорию</MenuItem>
+                                {categories.map((category) => (
+                                    <MenuItem key={category.id} value={category.id}>
+                                        {category.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            <Select
+                                className={styles.select}
+                                value={selectedProvider}
+                                onChange={(event) => setSelectedProvider(event.target.value)}
+                                label="Поставщик"
+                                fullWidth
+                            >
+                                <MenuItem value="">Выберите поставщика</MenuItem>
+                                {providers.map((provider) => (
+                                    <MenuItem key={provider.id} value={provider.id}>
+                                        {provider.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
                         </form>
                     </DialogContent>
                     <DialogActions>
-                        <Button color="error" type="submit" onClick={handleDelete}>Удалить</Button>
-                        <Button type='submit' onClick={handleSubmit(onSubmit)}>Изменить/Добавить</Button>
+                        {productId && (
+                            <Button color="error" onClick={() => handleDelete(product.find(obj => obj.id === productId))}>
+                                Удалить
+                            </Button>
+                        )}
+                        <Button onClick={handleClose}>Отмена</Button>
+                        <Button type='submit' onClick={handleSubmit(onSubmit)}>Сохранить</Button>
                     </DialogActions>
                 </Dialog>
             </main>

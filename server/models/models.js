@@ -1,66 +1,50 @@
 const sequelize = require('../db');
 const { DataTypes } = require('sequelize');
 
-const Employee = sequelize.define('employee', {
+const Products = sequelize.define('products', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    email: { type: DataTypes.STRING, unique: true },
-    password: { type: DataTypes.STRING, allowNull: false },
     name: { type: DataTypes.STRING, allowNull: false },
-    surname: { type: DataTypes.STRING, allowNull: false },
-    job_title: { type: DataTypes.STRING, allowNull: false },
-    date_of_employment: { type: DataTypes.DATE, allowNull: false },
-    salary: { type: DataTypes.STRING, allowNull: false },
+    description: { type: DataTypes.TEXT, allowNull: false },
+    price: { type: DataTypes.DECIMAL, allowNull: false},
+    quantity: { type: DataTypes.INTEGER, allowNull: false}
 })
 
-const Order = sequelize.define('order', {
+const Categories = sequelize.define('categories', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    data_order: { type: DataTypes.DATE, allowNull: false },
-    status: { type: DataTypes.STRING, allowNull: false },
-    description: { type: DataTypes.STRING, allowNull: false }
+    name: { type: DataTypes.STRING, allowNull: false}
 })
 
-const Customer = sequelize.define('customer', {
+const Providers = sequelize.define('provider', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, allowNull: false},
-    telephone: { type: DataTypes.STRING, allowNull: false },
-    description_order: { type: DataTypes.STRING, allowNull: false },
-    quantity_order: { type: DataTypes.STRING, allowNull: false }
-})
-
-const Provider = sequelize.define('provider', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name_provider: { type: DataTypes.STRING, allowNull: false },
+    name: { type: DataTypes.STRING, allowNull: false },
     address: { type: DataTypes.STRING, allowNull: false },
-    telephone: { type: DataTypes.STRING, allowNull: false },
-    contact_person: { type: DataTypes.STRING, allowNull: false }
+    telephone: { type: DataTypes.STRING, allowNull: false }
 })
 
-const Stock = sequelize.define('stock', {
+const Stocks = sequelize.define('stock', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     address: { type: DataTypes.STRING, allowNull: false },
     name: { type: DataTypes.STRING, allowNull: false }
 })
 
-const StockOrder = sequelize.define('stock_order', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
+const StockItems = sequelize.define('stock_items', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    quantity: { type: DataTypes.INTEGER}
 })
 
-Employee.hasMany(Order)
-Order.belongsTo(Employee)
+Categories.hasMany(Products);
+Products.belongsTo(Categories, { foreignKey: 'categoryId' });
 
-Provider.hasMany(Order)
-Order.belongsTo(Provider)
+Providers.hasMany(Products);
+Products.belongsTo(Providers, { foreignKey: 'providerId' });
 
-Customer.hasMany(Order)
-Order.belongsTo(Customer)
-
-Stock.belongsToMany(Order, { through: StockOrder })
-Order.belongsToMany(Stock, { through: StockOrder })
+Stocks.belongsToMany(Products, { through: StockItems, foreignKey: 'stockId' });
+Products.belongsToMany(Stocks, { through: StockItems, foreignKey: 'productId' });
 
 module.exports = {
-    Employee,
-    Order,
-    Customer,
-    Provider,
-    Stock
+    Products,
+    Stocks,
+    Categories,
+    Providers,
+    StockItems
 }

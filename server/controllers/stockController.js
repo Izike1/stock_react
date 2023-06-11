@@ -1,4 +1,4 @@
-const { Stock, Provider} = require('../models/models');
+const { Stock } = require('../models/models');
 const ApiError = require("../errors/ApiErrors");
 
 class StockController {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "react-hook-form";
-import {fetchProviders, fetchCreateProvider, fetchDeleteProvider} from "../../redux/slices/providerSlice.js";
+import {fetchCategories, fetchCreateCategories, fetchDeleteCategories} from "../../redux/slices/categoriesSlice.js";
 
 import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
@@ -21,61 +21,56 @@ import DialogActions from "@mui/material/DialogActions";
 import styles from '../../assets/styles/Styles.module.css'
 
 
-function Provider() {
+function Categories() {
     const dispatch = useDispatch();
 
     const [open, setOpen] = React.useState(false);
-    const [providerId, setProviderId] = React.useState(null);
+    const [categoriesId, setCategoriesId] = React.useState(null);
 
     const { register, handleSubmit, setError, formState: { errors, isValid } } = useForm({
         defaultValues: {
-            description: '',
-            price: '',
             name: '',
-            quantity: '',
         }
     })
-    const { items: provider, status } = useSelector(state => state.provider.providers);
+    const { items: categories, status } = useSelector(state => state.categories.categories);
 
 
     React.useEffect(() => {
-        dispatch(fetchProviders())
+        dispatch(fetchCategories())
     }, [dispatch])
 
     const onSubmit = (data) => {
-        dispatch(fetchCreateProvider(data));
+        dispatch(fetchCreateCategories(data));
         handleClose();
     }
 
     const handleDelete = (value) => {
-        if (providerId) {
-            dispatch(fetchDeleteProvider({ id: providerId, ...value }))
+        if (categoriesId) {
+            dispatch(fetchDeleteCategories({ id: categoriesId, ...value }))
         }
         handleClose();
     }
 
-    const handleOpen = (providerId) => {
+    const handleOpen = (categoriesId) => {
         setOpen(true);
-        setProviderId(providerId);
+        setCategoriesId(categoriesId);
     }
 
     const handleClose = () => {
         setOpen(false);
-        setProviderId(null);
+        setCategoriesId(null);
     }
     return (
         <>
             <main className={styles.root}>
                 <Typography variant="h4" component="h4" className={styles.title}>
-                    Поставщики
+                    Категории
                 </Typography>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Название</TableCell>
-                                <TableCell align="right">Адресс</TableCell>
-                                <TableCell align="right">Телефон</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -88,13 +83,11 @@ function Provider() {
                                     <TableCell colSpan={4}>Ошибка при загрузке данных...</TableCell>
                                 </TableRow>
                             ) : (
-                                provider.map((obj, index) => (
+                                categories.map((obj, index) => (
                                     <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                                         <TableCell component="th" scope="row">
                                             {obj.name}
                                         </TableCell>
-                                        <TableCell align="right">{obj.address}</TableCell>
-                                        <TableCell align="right">{obj.telephone}</TableCell>
                                         <TableCell align="right">
                                             <Button onClick={() => handleOpen(obj.id)}>Изменить</Button>
                                         </TableCell>
@@ -119,22 +112,6 @@ function Provider() {
                                 label='Название'
                                 fullWidth
                             />
-                            <TextField
-                                variant="standard"
-                                className={styles.field}
-                                error={Boolean(errors.address?.message)}
-                                {...register('address', { required: 'Пустое поле' })}
-                                label='Адресс'
-                                fullWidth
-                            />
-                            <TextField
-                                variant="standard"
-                                className={styles.field}
-                                error={Boolean(errors.telephone?.message)}
-                                {...register('telephone', { required: 'Пустое поле' })}
-                                label='Телефон'
-                                fullWidth
-                            />
                         </form>
                     </DialogContent>
                     <DialogActions>
@@ -147,4 +124,4 @@ function Provider() {
     );
 }
 
-export default Provider;
+export default Categories;

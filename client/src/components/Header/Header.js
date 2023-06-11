@@ -50,15 +50,17 @@ export default function Header() {
                                     }}
                                 >
                                     <MenuItem onClick={handleClose}>
-                                        <Link className={styles.headerLink} to="/employee">Employee</Link>
+                                        <Link className={styles.headerLink} to="/provider">Поставщики</Link>
                                     </MenuItem>
                                     <MenuItem onClick={handleClose}>
                                         <Link className={styles.headerLink} to="/stock">
-                                            Stock
+                                            Склады
                                         </Link>
                                     </MenuItem>
                                     <MenuItem onClick={handleClose}>
-                                        <Link className={styles.headerLink} to='/provider'>Provider</Link>
+                                        <Link className={styles.headerLink} to="/categories">
+                                            Категории
+                                        </Link>
                                     </MenuItem>
                                 </Menu>
                             </nav>

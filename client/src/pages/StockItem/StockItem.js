@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { fetchCreateCustomer, fetchCustomer } from "../../redux/slices/customerSlice";
+import { fetchStockItem, fetchAddStockItem } from "../../redux/slices/stockSlice";
 
 import { TextField } from "@mui/material";
 import Dialog from '@mui/material/Dialog';
@@ -19,9 +19,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import styles from '../../assets/styles/Styles.module.css'
+import styles from "../../assets/styles/Styles.module.css";
 
-export default function Customer() {
+export default function StockItem() {
     const dispatch = useDispatch();
 
     const [open, setOpen] = React.useState(false);
@@ -33,14 +33,16 @@ export default function Customer() {
             data_order: ''
         }
     })
-    const { items: customers, status } = useSelector(state => state.customer.customers);
+    const { items: stocks, status } = useSelector(state => state.stock.stocks);
+
 
     React.useEffect(() => {
-        dispatch(fetchCustomer)
+        dispatch(fetchStockItem())
     }, [dispatch])
 
-    const onSubmit = (data) => {
-        dispatch(fetchCreateCustomer(data))
+    const onSubmit = (value) => {
+        dispatch(fetchAddStockItem(value));
+        handleClose();
     }
 
     const handleOpen = () => {
@@ -53,18 +55,16 @@ export default function Customer() {
 
     return (
         <>
-            <main className={styles.root}>
+            <main className={styles.homePage}>
                 <Typography variant="h4" component="h4" className={styles.title}>
-                    Клиенты
+                    Склады
                 </Typography>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Описание</TableCell>
-                                <TableCell align="right">Дата создания</TableCell>
-                                <TableCell align="right">Статус</TableCell>
-                                <TableCell align="right">Действия</TableCell>
+                                <TableCell>Адресс</TableCell>
+                                <TableCell align="right">Имя</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -77,20 +77,16 @@ export default function Customer() {
                                     <TableCell colSpan={4}>Ошибка при загрузке заказов.</TableCell>
                                 </TableRow>
                             ) : (
-                                customers.map((obj, index) => (
-                                    <>
-                                        <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                            <TableCell component="th" scope="row">
-                                                {obj.name}
-                                            </TableCell>
-                                            <TableCell align="right">{obj.telephone}</TableCell>
-                                            <TableCell align="right">{obj.description_order}</TableCell>
-                                            <TableCell align="right">{obj.quantity_order}</TableCell>
-                                            <TableCell align="right">
-                                                <Button onClick={() => handleOpen(obj.id)}>Изменить</Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    </>
+                                stocks.map((obj, index) => (
+                                    <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                                        <TableCell component="th" scope="row">
+                                            {obj.address}
+                                        </TableCell>
+                                        <TableCell align="right">{obj.name}</TableCell>
+                                        <TableCell align="right">
+                                            <Button onClick={() => handleOpen(obj.id)}>Изменить</Button>
+                                        </TableCell>
+                                    </TableRow>
                                 ))
                             )}
                         </TableBody>
@@ -98,39 +94,32 @@ export default function Customer() {
                 </TableContainer>
                 <Button>
                     <Link className={styles.homeLink} onClick={handleOpen}>
-                        Добавить клиента
+                        Добавить склад
                     </Link>
                 </Button>
                 <Dialog open={open} onClose={handleClose}>
-                    <DialogTitle>Изменить/Добавить клиента</DialogTitle>
+                    <DialogTitle>Изменить/Добавить заказ</DialogTitle>
                     <DialogContent>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <TextField
                                 variant="standard"
                                 className={styles.field}
-                                error={Boolean(errors.description?.message)}
-                                {...register('description', { required: 'Пустое поле' })}
-                                label='Описание заказа'
+                                error={Boolean(errors.address?.message)}
+                                {...register('address', { required: 'Пустое поле' })}
+                                label='Адресс'
                                 fullWidth
                             />
                             <TextField
                                 variant="standard"
                                 className={styles.field}
-                                error={Boolean(errors.status?.message)}
-                                {...register('status', { required: 'Пустое поле' })}
-                                label='Статус заказа'
+                                error={Boolean(errors.name?.message)}
+                                {...register('name', { required: 'Пустое поле' })}
+                                label='Имя'
                                 fullWidth
-                            />
-                            <p>Дата создания заказа</p>
-                            <input
-                                type="date"
-                                {...register('data_order', { required: 'Пустое поле' })}
-                                className={styles.field}
                             />
                         </form>
                     </DialogContent>
                     <DialogActions>
-                        <Button color="error" type="submit" onClick={handleDelete}>Удалить</Button>
                         <Button type='submit' onClick={handleSubmit(onSubmit)}>Изменить/Добавить</Button>
                     </DialogActions>
                 </Dialog>
