@@ -1,11 +1,11 @@
-const { Products, Categories, Providers, Stocks } = require('../models/models');
+const { Products, Categories, Providers } = require('../models/models');
 
 class ProductController {
     async create(req, res) {
         try {
-            const { name, description, price, quantity, providerId, categoryId, stockId } = req.body;
+            const { name, description, price, quantity, providerId, categoryId } = req.body;
 
-            if (!name || !description || !price || !quantity || !providerId || !categoryId || !stockId) {
+            if (!name || !description || !price || !quantity || !providerId || !categoryId) {
                 return res.status(400).json({ error: 'Missing required fields' });
             }
 
@@ -19,19 +19,13 @@ class ProductController {
                 return res.status(404).json({ error: 'Category not found' });
             }
 
-            const stock = await Stocks.findByPk(stockId);
-            if (!stock) {
-                return res.status(404).json({ error: 'Stock not found' });
-            }
-
             const product = await Products.create({
                 name,
                 description,
                 price,
                 quantity,
                 providerId,
-                categoryId,
-                stockId
+                categoryId
             });
 
             return res.json(product);
