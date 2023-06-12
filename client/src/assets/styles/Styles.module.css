@@ -1,4 +1,5 @@
 .root {
+    width: 900px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -22,6 +23,10 @@ button {
 
 .field {
     margin-bottom: 20px !important;
+}
+
+.select>MenuItem {
+    color: inherit;
 }
 
 .select:not(:last-child) {

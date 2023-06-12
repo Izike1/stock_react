@@ -47,7 +47,6 @@ export default function Home() {
         dispatch(fetchProducts());
         dispatch(fetchCategories());
         dispatch(fetchProviders());
-        console.log(providers.name)
     }, [dispatch]);
 
     const onSubmit = (data) => {
@@ -89,7 +88,7 @@ export default function Home() {
                             <TableRow>
                                 <TableCell>Описание</TableCell>
                                 <TableCell align="right">Название</TableCell>
-                                <TableCell align="right">Цена</TableCell>
+                                <TableCell align="right">Цена (шт.)</TableCell>
                                 <TableCell align="right">Количество</TableCell>
                                 <TableCell align="right">Категория</TableCell>
                                 <TableCell align="right">Поставщик</TableCell>
@@ -99,14 +98,13 @@ export default function Home() {
                             {product.map((obj, index) => {
                                 const category = categories.find((category) => category.id === obj.categoryId);
                                 const provider = providers.find((provider) => provider.id === obj.providerId);
-
                                 return (
                                     <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                                         <TableCell component="th" scope="row">
                                             {obj.description}
                                         </TableCell>
                                         <TableCell align="right">{obj.name}</TableCell>
-                                        <TableCell align="right">{obj.price}</TableCell>
+                                        <TableCell align="right">{obj.price + ` руб.`}</TableCell>
                                         <TableCell align="right">{obj.quantity}</TableCell>
                                         <TableCell align="right">{category ? category.name : ''}</TableCell>
                                         <TableCell align="right">{provider ? provider.name : ''}</TableCell>
