@@ -1,11 +1,11 @@
-const { Stock } = require('../models/models');
+const { Stocks } = require('../models/models');
 const ApiError = require("../errors/ApiErrors");
 
 class StockController {
     async create(req, res) {
         try {
             const { name, address } = req.body;
-            const stock = await Stock.create({ name, address });
+            const stock = await Stocks.create({ name, address });
 
             return res.json(stock)
         } catch (e) {
@@ -14,23 +14,23 @@ class StockController {
     }
 
     async delete(req, res, next) {
-        const { id } = res.query;
+        const { id } = req.query;
 
         if (!id) {
             next(ApiError.badRequest('Error delete'))
         }
-        await Stock.destroy({ where: { id: id } });
+        await Stocks.destroy({ where: { id: id } });
         return res.json('Delete access')
     }
 
     async getAll(req, res) {
-        const { id } = res.query;
+        const { id } = req.query;
         let stock;
         if (!id) {
-            stock = await Stock.findAll();
+            stock = await Stocks.findAll();
             return res.json(stock);
         }
-        stock = await Stock.findAll({where: { id: id }});
+        stock = await Stocks.findAll({ where: { id: id } });
         return res.json(stock)
     }
 }
