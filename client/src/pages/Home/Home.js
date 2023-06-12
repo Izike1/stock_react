@@ -95,8 +95,12 @@ export default function Home() {
                                 <TableCell align="right">Поставщик</TableCell>
                             </TableRow>
                         </TableHead>
-                            <TableBody>
-                                {product.map((obj, index) => (
+                        <TableBody>
+                            {product.map((obj, index) => {
+                                const category = categories.find((category) => category.id === obj.categoryId);
+                                const provider = providers.find((provider) => provider.id === obj.providerId);
+
+                                return (
                                     <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                                         <TableCell component="th" scope="row">
                                             {obj.description}
@@ -104,14 +108,15 @@ export default function Home() {
                                         <TableCell align="right">{obj.name}</TableCell>
                                         <TableCell align="right">{obj.price}</TableCell>
                                         <TableCell align="right">{obj.quantity}</TableCell>
-                                        <TableCell align="right">{obj.category?.name}</TableCell>
-                                        <TableCell align="right">{obj.provider?.name}</TableCell>
+                                        <TableCell align="right">{category ? category.name : ''}</TableCell>
+                                        <TableCell align="right">{provider ? provider.name : ''}</TableCell>
                                         <TableCell align="right">
                                             <Button onClick={() => handleOpen(obj.id)}>Изменить</Button>
                                         </TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
+                                );
+                            })}
+                        </TableBody>
                     </Table>
                 </TableContainer>
                 <Button className={styles.homeLink} onClick={() => handleOpen(null)}>
