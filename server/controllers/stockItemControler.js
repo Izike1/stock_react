@@ -1,4 +1,5 @@
-const { StockItems} = require('../models/models');
+const { StockItems } = require('../models/models');
+
 class StockItemsController {
 
     async create(req, res) {
@@ -29,7 +30,7 @@ class StockItemsController {
             stockItems = await StockItems.findAll();
             return res.json(stockItems)
         }
-        stockItems = await StockItems.findAll( {where: { id: id }})
+        stockItems = await StockItems.findAll({ where: { id: id } })
         return res.json(stockItems)
     }
 

@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, fetchCreateProduct, fetchDeleteProduct } from "../../redux/slices/productSlice";
 import { fetchProviders } from "../../redux/slices/providerSlice";
 import { fetchCategories } from "../../redux/slices/categoriesSlice";
+import { fetchStock } from "../../redux/slices/stockSlice";
+import { fetchStockItem } from "../../redux/slices/stockItemSlice";
 import { useForm } from 'react-hook-form';
 
 import { MenuItem, Select } from "@mui/material";
@@ -28,6 +30,7 @@ export default function Home() {
 
     const [selectedCategory, setSelectedCategory] = React.useState("");
     const [selectedProvider, setSelectedProvider] = React.useState("");
+    const [selectedStock, setSelectedStock] = React.useState("");
     const [open, setOpen] = React.useState(false);
     const [productId, setProductId] = React.useState(null);
 
@@ -42,18 +45,22 @@ export default function Home() {
     const { items: product } = useSelector(state => state.product.products);
     const { items: providers } = useSelector(state => state.provider.providers);
     const { items: categories } = useSelector(state => state.categories.categories);
+    const { items: stocks } = useSelector(state => state.stock.stocks);
+    const { items: stocksItem } = useSelector(state => state.stockItem.stockItem);
 
     React.useEffect(() => {
         dispatch(fetchProducts());
         dispatch(fetchCategories());
         dispatch(fetchProviders());
+        dispatch(fetchStock());
+        dispatch(fetchStockItem());
     }, [dispatch]);
-
     const onSubmit = (data) => {
         const productData = {
             ...data,
             categoryId: selectedCategory,
-            providerId: selectedProvider
+            providerId: selectedProvider,
+            stockId: selectedStock,
         };
         dispatch(fetchCreateProduct(productData));
         handleClose();
@@ -92,12 +99,16 @@ export default function Home() {
                                 <TableCell align="right">Количество</TableCell>
                                 <TableCell align="right">Категория</TableCell>
                                 <TableCell align="right">Поставщик</TableCell>
+                                <TableCell align="right">Склад</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {product.map((obj, index) => {
                                 const category = categories.find((category) => category.id === obj.categoryId);
                                 const provider = providers.find((provider) => provider.id === obj.providerId);
+                                const stockItem = stocksItem.find((item) => item.id === obj.stockItemId);
+                                const stockItemStock = stockItem ? stocks.find((stock) => stock.id === stockItem.stockId) : null;
+                                console.log(stockItem)
                                 return (
                                     <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                                         <TableCell component="th" scope="row">
@@ -106,8 +117,9 @@ export default function Home() {
                                         <TableCell align="right">{obj.name}</TableCell>
                                         <TableCell align="right">{obj.price + ` руб.`}</TableCell>
                                         <TableCell align="right">{obj.quantity}</TableCell>
-                                        <TableCell align="right">{category ? category.name : ''}</TableCell>
-                                        <TableCell align="right">{provider ? provider.name : ''}</TableCell>
+                                        <TableCell align="right">{category ? category.name : ""}</TableCell>
+                                        <TableCell align="right">{provider ? provider.name : ""}</TableCell>
+                                        <TableCell align="right">{stockItemStock ? stockItemStock.name : ""}</TableCell>
                                         <TableCell align="right">
                                             <Button onClick={() => handleOpen(obj.id)}>Изменить</Button>
                                         </TableCell>
@@ -181,6 +193,20 @@ export default function Home() {
                                 {providers.map((provider) => (
                                     <MenuItem key={provider.id} value={provider.id}>
                                         {provider.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            <Select
+                                className={styles.select}
+                                value={selectedStock}
+                                onChange={(event) => setSelectedStock(event.target.value)}
+                                label="Склад"
+                                fullWidth
+                            >
+                                <MenuItem value="">Выберите склад</MenuItem>
+                                {stocks.map((stock) => (
+                                    <MenuItem key={stock.id} value={stock.id}>
+                                        {stock.name}
                                     </MenuItem>
                                 ))}
                             </Select>
