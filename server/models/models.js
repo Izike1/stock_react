@@ -5,13 +5,13 @@ const Products = sequelize.define('products', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.TEXT, allowNull: false },
-    price: { type: DataTypes.DECIMAL, allowNull: false},
-    quantity: { type: DataTypes.INTEGER, allowNull: false}
+    price: { type: DataTypes.DECIMAL, allowNull: false },
+    quantity: { type: DataTypes.INTEGER, allowNull: false }
 })
 
 const Categories = sequelize.define('categories', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, allowNull: false}
+    name: { type: DataTypes.STRING, allowNull: false }
 })
 
 const Providers = sequelize.define('provider', {
@@ -29,7 +29,7 @@ const Stocks = sequelize.define('stock', {
 
 const StockItems = sequelize.define('stock_items', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    quantity: { type: DataTypes.INTEGER}
+    quantity: { type: DataTypes.INTEGER }
 })
 
 Categories.hasMany(Products);

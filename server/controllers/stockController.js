@@ -7,6 +7,8 @@ class StockController {
             const { name, address } = req.body;
             const stock = await Stocks.create({ name, address });
 
+
+
             return res.json(stock)
         } catch (e) {
             console.error('Error create stock', e)

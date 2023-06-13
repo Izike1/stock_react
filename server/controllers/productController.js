@@ -1,4 +1,4 @@
-const { Products, Categories, Providers, StockItems } = require('../models/models');
+const { Products, Categories, Providers, StockItems, Stocks } = require('../models/models');
 
 class ProductController {
     async create(req, res) {
@@ -76,10 +76,11 @@ class ProductController {
         const { id } = req.query;
         let products;
         if (!id) {
-            products = await Products.findAll();
+            products = await Products.findAll({ include: [Stocks] });
             return res.json(products)
         }
         products = await Products.findAll({ where: { id: id } });
+        console.log(product)
         return res.json(products)
     }
 }

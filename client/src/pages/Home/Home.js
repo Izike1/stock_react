@@ -42,6 +42,7 @@ export default function Home() {
             quantity: '',
         }
     });
+
     const { items: product } = useSelector(state => state.product.products);
     const { items: providers } = useSelector(state => state.provider.providers);
     const { items: categories } = useSelector(state => state.categories.categories);
@@ -106,9 +107,10 @@ export default function Home() {
                             {product.map((obj, index) => {
                                 const category = categories.find((category) => category.id === obj.categoryId);
                                 const provider = providers.find((provider) => provider.id === obj.providerId);
-                                const stockItem = stocksItem.find((item) => item.id === obj.stockItemId);
-                                const stockItemStock = stockItem ? stocks.find((stock) => stock.id === stockItem.stockId) : null;
-                                console.log(stockItem)
+                                const stockId = obj.stockItemId;
+                                const stock = stocks.find((stock) => stock.id === stockId);
+
+                                const stockName = stock ? stock.name : "";
                                 return (
                                     <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                                         <TableCell component="th" scope="row">
@@ -119,7 +121,7 @@ export default function Home() {
                                         <TableCell align="right">{obj.quantity}</TableCell>
                                         <TableCell align="right">{category ? category.name : ""}</TableCell>
                                         <TableCell align="right">{provider ? provider.name : ""}</TableCell>
-                                        <TableCell align="right">{stockItemStock ? stockItemStock.name : ""}</TableCell>
+                                        <TableCell align="right">{obj.stocks[0].name}</TableCell>
                                         <TableCell align="right">
                                             <Button onClick={() => handleOpen(obj.id)}>Изменить</Button>
                                         </TableCell>
